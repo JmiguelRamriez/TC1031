@@ -47,6 +47,7 @@ El programa utiliza el algoritmo `std::sort` de la librería estándar de C++ (`
 Gracias a esta combinación, la complejidad de `std::sort` es:
 
 * **Complejidad Temporal (Tiempo):**
+    *  **Mejor de los casos:** O(n log n)
     * **Caso Promedio:** O(n log n)
     * **Peor de los casos:** O(n log n)
 * **Complejidad Espacial (Memoria):** O(log n), debido al espacio requerido por la pila de recursión de Quicksort.
