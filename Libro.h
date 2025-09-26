@@ -1,3 +1,7 @@
+//Nombre: José Miguel Ramírez
+//Matricula: A01712628
+
+
 #ifndef LIBRO_H
 #define LIBRO_H
 #include <iostream>
@@ -87,3 +91,4 @@ string Libro::mostrar_info() {
 
 
 #endif
+
