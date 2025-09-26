@@ -1,3 +1,7 @@
+//Nombre: José Miguel Ramírez
+//Matricula: A01712628
+
+
 #include <iostream>
 #include "Biblioteca.h"
 #include "Libro.h"
@@ -75,3 +79,4 @@ int main() {
 
     return 0;
 }
+
