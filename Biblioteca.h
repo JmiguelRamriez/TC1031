@@ -1,3 +1,6 @@
+//Nombre: José Miguel Ramírez
+//Matricula: A01712628
+
 #ifndef BIBLIOTECA_H
 #define BIBLIOTECA_H
 #include <iostream>
@@ -139,6 +142,7 @@ vector<Libro*> Biblioteca::bucar_anio(const int anio) {
     }
     return encontrados;
 }
+
 
 
 
