@@ -1,84 +1,67 @@
 //Nombre: José Miguel Ramírez
 //Matricula: A01712628
-
-#ifndef LIBRO_H
-#define LIBRO_H
 #include <iostream>
-#include <vector>
-#include <string>
+#include "Biblioteca.h"
+#include "Libro.h"
+
 using namespace std;
 
-class Libro {
-    private:
-        string titulo;
-        string autor;
-        string genero;
-	int anio_publicacion;
-        int cantidad_total;
-        int cantidad_disponible;
+int main() {
+    Biblioteca biblio;
 
-    public:
-        Libro();
-        Libro( string t, string a, string g, int anio, int cant_t, int cant_d );
+    biblio.leer_csv("libros.csv"); // Carga los libros al iniciar el programa
 
-        string get_titulo() const;
-        string get_genero()const;
-        string get_autor()const;
-        int get_anio_publicacion()const;
-        int get_cantidad_disponible()const;
-        int get_cantidad_total()const;
+    int opcion;
+    bool continuar = true;
+
+    while (continuar) {
+        cout << "\nMenu de la Biblioteca:" << endl;
+        cout << "1. Mostrar todos los libros" << endl;
+        cout << "2. Prestar un libro" << endl;
+        cout << "3. Devolver un libro" << endl;
+        cout << "4. Salir" << endl;
+        cout << "Ingrese una opcion: ";
         
-        void set_cantidad_disponible(int cant_d);
-        string mostrar_info();
-};
+        if (!(cin >> opcion)) {
+            cout << "Entrada invalida. Por favor, ingrese un numero." << endl;
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
 
-Libro::Libro(){
-    titulo = "";
-    autor = "";
-    genero = "";
-    anio_publicacion = 0;
-    cantidad_total = 0;
-    cantidad_disponible = 0;
+        switch (opcion) {
+            case 1: {
+                cout << "\n--- Libros en la biblioteca ---" << endl;
+                biblio.mostrar_todos_libros();
+                break;
+            }
+            case 2: {
+                string titulo;
+                cout << "Ingrese el titulo del libro a prestar: ";
+                cin.ignore(); // Limpiar el buffer del teclado
+                getline(cin, titulo);
+                biblio.prestar_libro(titulo);
+                break;
+            }
+            case 3: {
+                string titulo;
+                cout << "Ingrese el titulo del libro a devolver: ";
+                cin.ignore();
+                getline(cin, titulo);
+                biblio.devolver_libro(titulo);
+                break;
+            }
+            case 4: {
+                biblio.guardar_csv("libros.csv");
+                cout << "Guardando cambios y saliendo..." << endl;
+                continuar = false;
+                break;
+            }
+            default:
+                cout << "Opcion no valida. Intente de nuevo." << endl;
+                break;
+        }
+    }
+
+    return 0;
 }
-
-Libro::Libro(string t, string a, string g, int anio, int cant_t, int cant_d ):
- titulo(t), autor(a), genero(g), anio_publicacion(anio), cantidad_total(cant_t), cantidad_disponible(cant_d){};
-
-string Libro::get_titulo() const {
-        return titulo;
-}
-
-string Libro::get_autor()const {
-    return autor;
-}
-
-string Libro::get_genero() const{
-    return genero;
-}
-
-int Libro::get_anio_publicacion() const{
-    return anio_publicacion;
-}
-
-int Libro::get_cantidad_disponible() const{
-    return cantidad_disponible;
-}
-
-int Libro::get_cantidad_total() const{
-        return cantidad_total;
-}
-
-void Libro::set_cantidad_disponible(int cant_d){
-       cantidad_disponible = cant_d;
-}
-string Libro::mostrar_info() {
-    string info = "Titulo: " + titulo + "\n";
-    info += "Autor: " + autor + "\n";
-    info += "Genero: " + genero + "\n";
-    info += "Anio de publicacion: " + to_string(anio_publicacion) + "\n";
-    info += "Disponibles: " + to_string(cantidad_disponible) + "/" + to_string(cantidad_total) + "\n";
-        return info;
-}
-
-
-#endif
