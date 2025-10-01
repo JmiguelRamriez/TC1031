@@ -22,13 +22,14 @@ Para compilar y ejecutar el programa, necesitarás un compilador de C++ (como g+
 1.  **Compilación:**
     Asegúrate de tener los tres archivos (`Libro.h`, `Biblioteca.h`, `Main.cpp`) en el mismo directorio. Abre una terminal y ejecuta el siguiente comando. Se usa el estándar C++11 por las funciones lambda utilizadas en el ordenamiento.
     ```bash
-    g++ Main.cpp 
+    g++ Main.cpp
     ```
 
 2.  **Ejecución:**
     Una vez compilado, ejecuta el programa con el siguiente comando:
     ```bash
-    ..\a.exe
+    ./a.out   # Para sistemas tipo Linux/macOS
+    a.exe     # Para sistemas Windows
     ```
 
 3.  **Resultados Esperados:**
@@ -44,10 +45,15 @@ Para compilar y ejecutar el programa, necesitarás un compilador de C++ (como g+
 
 El programa utiliza el algoritmo `std::sort` de la librería estándar de C++ (`<algorithm>`) para ordenar el catálogo de libros. Este no es un algoritmo simple, sino una implementación altamente optimizada, generalmente **Introsort (Ordenamiento introspectivo)**.
 
+`Introsort` es un algoritmo híbrido que combina las fortalezas de tres algoritmos de ordenamiento: Quicksort, Heapsort y Insertion Sort.
+* Comienza con **Quicksort** por su excelente rendimiento en el caso promedio. Su complejidad es O(n log n) en tiempo y O(log n) en espacio para la pila de recursión.
+* Si la recursión de Quicksort se profundiza demasiado (lo que podría llevar a un rendimiento de O(n²)), `Introsort` cambia a **Heapsort** para garantizar la complejidad de O(n log n) en el peor de los casos.
+* Para subproblemas muy pequeños (por ejemplo, menos de 16 elementos), `Introsort` cambia a **Insertion Sort**, que es más eficiente para conjuntos de datos pequeños.
+
 Gracias a esta combinación, la complejidad de `std::sort` es:
 
 * **Complejidad Temporal (Tiempo):**
-    *  **Mejor de los casos:** O(n log n)
+    * **Mejor de los casos:** O(n log n)
     * **Caso Promedio:** O(n log n)
     * **Peor de los casos:** O(n log n)
 * **Complejidad Espacial (Memoria):** O(log n), debido al espacio requerido por la pila de recursión de Quicksort.
@@ -64,5 +70,6 @@ La selección de `std::sort` es una decisión adecuada para este problema por la
 
 2.  **Uso de la Biblioteca Estándar:** Utilizar un algoritmo de la biblioteca estándar es una decisión de ingeniería sólida. `std::sort` está probado, depurado y optimizado por los desarrolladores del compilador. Esto evita la necesidad de "reinventar la rueda" y reduce la probabilidad de introducir errores que podrían surgir al implementar un algoritmo de ordenamiento desde cero.
 
-3.  **Flexibilidad:** El problema requiere ordenar por diferentes criterios (título y año). `std::sort` es ideal para esto, ya que permite pasar una **función de comparación personalizada**. 
-    Este enfoque demuestra el uso **correcto y avanzado** del algoritmo, ya que se adapta fácilmente a las necesidades específicas del problema sin requerir cambios estructurales. La selección  aplicación de `std::sort` son, por lo tanto, óptimas para los requisitos del proyecto.
+3.  **Flexibilidad:** El problema requiere ordenar por diferentes criterios (título y año). `std::sort` es ideal para esto, ya que permite pasar una **función de comparación personalizada**. Este enfoque demuestra el uso **correcto y avanzado** del algoritmo, ya que se adapta fácilmente a las necesidades específicas del problema sin requerir cambios estructurales. La selección y aplicación de `std::sort` son, por lo tanto, óptimas para los requisitos del proyecto.
+
+---
