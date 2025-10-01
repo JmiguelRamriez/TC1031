@@ -1,7 +1,6 @@
 //Nombre: José Miguel Ramírez
 //Matricula: A01712628
 
-
 #ifndef LIBRO_H
 #define LIBRO_H
 #include <iostream>
@@ -11,7 +10,6 @@ using namespace std;
 
 class Libro {
     private:
-        string isbn;
         string titulo;
         string autor;
         string genero;
@@ -21,22 +19,20 @@ class Libro {
 
     public:
         Libro();
-        Libro(string i, string t, string a, string g, int anio, int cant_t, int cant_d );
+        Libro( string t, string a, string g, int anio, int cant_t, int cant_d );
 
-        string get_isbn();
         string get_titulo() const;
-        string get_genero();
-        string get_autor();
+        string get_genero()const;
+        string get_autor()const;
         int get_anio_publicacion()const;
-        int get_cantidad_disponible();
-        int get_cantidad_total();
+        int get_cantidad_disponible()const;
+        int get_cantidad_total()const;
         
         void set_cantidad_disponible(int cant_d);
         string mostrar_info();
 };
 
 Libro::Libro(){
-    isbn = "";
     titulo = "";
     autor = "";
     genero = "";
@@ -45,22 +41,18 @@ Libro::Libro(){
     cantidad_disponible = 0;
 }
 
-Libro::Libro(string i, string t, string a, string g, int anio, int cant_t, int cant_d ):
-isbn(i), titulo(t), autor(a), genero(g), anio_publicacion(anio), cantidad_total(cant_t), cantidad_disponible(cant_d){};
-
-string Libro::get_isbn(){
-    return isbn;
-}
+Libro::Libro(string t, string a, string g, int anio, int cant_t, int cant_d ):
+ titulo(t), autor(a), genero(g), anio_publicacion(anio), cantidad_total(cant_t), cantidad_disponible(cant_d){};
 
 string Libro::get_titulo() const {
         return titulo;
 }
 
-string Libro::get_autor(){
+string Libro::get_autor()const {
     return autor;
 }
 
-string Libro::get_genero(){
+string Libro::get_genero() const{
     return genero;
 }
 
@@ -68,11 +60,11 @@ int Libro::get_anio_publicacion() const{
     return anio_publicacion;
 }
 
-int Libro::get_cantidad_disponible(){
+int Libro::get_cantidad_disponible() const{
     return cantidad_disponible;
 }
 
-int Libro::get_cantidad_total(){
+int Libro::get_cantidad_total() const{
         return cantidad_total;
 }
 
@@ -80,8 +72,7 @@ void Libro::set_cantidad_disponible(int cant_d){
        cantidad_disponible = cant_d;
 }
 string Libro::mostrar_info() {
-    string info = "ISBN: " + isbn + "\n";
-    info += "Titulo: " + titulo + "\n";
+    string info = "Titulo: " + titulo + "\n";
     info += "Autor: " + autor + "\n";
     info += "Genero: " + genero + "\n";
     info += "Anio de publicacion: " + to_string(anio_publicacion) + "\n";
@@ -91,4 +82,3 @@ string Libro::mostrar_info() {
 
 
 #endif
-
