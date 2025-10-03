@@ -1,10 +1,3 @@
-/*
- * Main.cpp
- *
- *  Created on: 02/10/2025
- *      Author: Jose Miguel Ramirez Gutierrez A01712628
- */
-
 #include <iostream>
 #include <string>
 #include "Biblioteca.h"
@@ -12,18 +5,10 @@
 
 using namespace std;
 
+// -------------------------------------------------------------------
 // Función que limpia la consola según el sistema operativo
-/*
- * limpiar_consola() - Limpia la pantalla de la consola.
- * Complejidad temporal:
- * - Mejor caso: O(1)
- * - Caso promedio: O(1)
- * - Peor caso: O(1)
- * Descripción: Ejecuta el comando apropiado para limpiar la consola según
- * el sistema operativo. En Windows usa "cls" y en Unix/Linux usa "clear".
- * La complejidad es constante ya que solo ejecuta un comando del sistema.
- */
-void limpiar_consola() {
+// -------------------------------------------------------------------
+void limpiar_consola(){
     #ifdef _WIN32
         system("cls"); // Comando para limpiar la consola en Windows
     #else
@@ -31,33 +16,19 @@ void limpiar_consola() {
     #endif
 }
 
+// -------------------------------------------------------------------
 // Función que pausa la ejecución hasta que el usuario presione Enter
-/*
- * pausar() - Pausa la ejecución hasta que el usuario presione Enter.
- * Complejidad temporal:
- * - Mejor caso: O(1)
- * - Caso promedio: O(1)
- * - Peor caso: O(1)
- * Descripción: Limpia el buffer de entrada y espera a que el usuario presione
- * Enter antes de continuar. La operación es de tiempo constante.
- */
+// -------------------------------------------------------------------
 void pausar() {
     cout << "\nPresiona Enter para continuar...";
     cin.ignore(); // Limpia el buffer
     cin.get();    // Espera la tecla Enter
 }
 
+// -------------------------------------------------------------------
 // Menú principal
-/*
- * Menu() - Muestra el menú principal de opciones.
- * Complejidad temporal:
- * - Mejor caso: O(1)
- * - Caso promedio: O(1)
- * - Peor caso: O(1)
- * Descripción: Imprime el menú de opciones disponibles en la consola.
- * La operación es de tiempo constante ya que solo imprime texto fijo.
- */
-void Menu() {
+// -------------------------------------------------------------------
+void Menu(){
     cout << "1. Mostrar todos los libros disponibles" << endl;
     cout << "2. Pedir prestado un libro" << endl;
     cout << "3. Devolver libros" << endl;
@@ -67,66 +38,39 @@ void Menu() {
     cout << "Elige una opcion: ";
 }
 
+// -------------------------------------------------------------------
 // Submenú para ordenar libros
-/*
- * Ordenar() - Muestra las opciones de ordenamiento.
- * Complejidad temporal:
- * - Mejor caso: O(1)
- * - Caso promedio: O(1)
- * - Peor caso: O(1)
- * Descripción: Imprime el submenú con las opciones para ordenar libros.
- * Operación de tiempo constante.
- */
-void Ordenar() {
+// -------------------------------------------------------------------
+void Ordenar(){
     cout << "1. Ordenar por titulo" << endl;
     cout << "2. Ordenar por anio" << endl;
     cout << "Elige una opcion: ";
 }
 
+// -------------------------------------------------------------------
 // Submenú para buscar libros
-/*
- * Buscar() - Muestra las opciones de búsqueda.
- * Complejidad temporal:
- * - Mejor caso: O(1)
- * - Caso promedio: O(1)
- * - Peor caso: O(1)
- * Descripción: Imprime el submenú con las opciones para buscar libros.
- * Operación de tiempo constante.
- */
-void Buscar() {
+// -------------------------------------------------------------------
+void Buscar(){
     cout << "1. Buscar por autor" << endl;
     cout << "2. Buscar por genero" << endl;
     cout << "3. Buscar por titulo" << endl;
     cout << "Elige una opcion: ";
 }
 
+// ===================== FUNCIONES DEL SWITCH ========================
+
+// -------------------------------------------------------------------
 // Opción 1: Mostrar todos los libros cargados en la biblioteca
-/*
- * opcionMostrarLibros() - Muestra todos los libros de la biblioteca.
- * Complejidad temporal:
- * - Mejor caso: O(n)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripción: Llama a la función mostrar_todos_libros() de la biblioteca,
- * que recorre y muestra todos los libros. La complejidad es lineal respecto
- * al número de libros en la biblioteca.
- */
+// -------------------------------------------------------------------
 void opcionMostrarLibros(Biblioteca &biblio) {
     cout << "\n--- Libros en la biblioteca ---" << endl;
     biblio.mostrar_todos_libros();
     pausar();
 }
 
+// -------------------------------------------------------------------
 // Opción 2: Pedir prestado un libro (reduce cantidad disponible en 1)
-/*
- * opcionPrestarLibro() - Gestiona el préstamo de un libro.
- * Complejidad temporal:
- * - Mejor caso: O(1) (si el libro está al inicio)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripción: Solicita el título del libro al usuario y llama a prestar_libro().
- * La complejidad depende de la búsqueda lineal del libro en el vector.
- */
+// -------------------------------------------------------------------
 void opcionPrestarLibro(Biblioteca &biblio) {
     cout << "Escribe el titulo del libro que quieres prestar: ";
     string titulo_prestar;
@@ -135,16 +79,9 @@ void opcionPrestarLibro(Biblioteca &biblio) {
     pausar();
 }
 
+// -------------------------------------------------------------------
 // Opción 3: Devolver un libro (aumenta cantidad disponible en 1)
-/*
- * opcionDevolverLibro() - Gestiona la devolución de un libro.
- * Complejidad temporal:
- * - Mejor caso: O(1) (si el libro está al inicio)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripción: Solicita el título del libro al usuario y llama a devolver_libro().
- * La complejidad depende de la búsqueda lineal del libro en el vector.
- */
+// -------------------------------------------------------------------
 void opcionDevolverLibro(Biblioteca &biblio) {
     cout << "Escribe el titulo del libro que quieres devolver: ";
     string titulo_devolver;
@@ -153,15 +90,136 @@ void opcionDevolverLibro(Biblioteca &biblio) {
     pausar();
 }
 
+// -------------------------------------------------------------------
 // Opción 4: Ordenar libros (por título o año)
-/*
- * opcionOrdenarLibros() - Ordena los libros según el criterio elegido.
- * Complejidad temporal:
- * - Mejor caso: O(n log n)
- * - Caso promedio: O(n log n)
- * - Peor caso: O(n log n)
- * Descripción: Permite al usuario elegir ordenar por título o año, luego
- * ejecuta el método de ordenamiento correspondiente y muestra los resultados.
- * La complejidad es O(n log n) debido al algoritmo de ordenamiento más
- * O(n) para mostrar los libros, resultando en O(n log n) total.
- */
+// -------------------------------------------------------------------
+void opcionOrdenarLibros(Biblioteca &biblio) {
+    int opcion_orden;
+    Ordenar();
+    cin >> opcion_orden;
+    cin.ignore();
+
+    if (opcion_orden == 1) {
+        biblio.ordenar_titulo();
+        cout << "\nLibros ordenados por titulo:\n";
+    } else if (opcion_orden == 2) {
+        biblio.ordenar_anio();
+        cout << "\nLibros ordenados por anio:\n";
+    } else {
+        cout << "Opcion no valida.\n";
+    }
+
+    // Muestra lista después de ordenar
+    biblio.mostrar_todos_libros();
+    pausar();
+}
+
+// -------------------------------------------------------------------
+// Opción 5: Buscar libros por autor, género o título
+// -------------------------------------------------------------------
+void opcionBuscarLibros(Biblioteca &biblio) {
+    int opcion_buscar;
+    Buscar();
+    cin >> opcion_buscar;
+    cin.ignore(); // Evitar problemas con getline
+
+    if (opcion_buscar == 1) {
+        // Buscar por autor
+        cout << "Escribe el autor que quieres buscar: ";
+        string autor_buscar;
+        getline(cin, autor_buscar);
+        vector<Libro*> encontrados = biblio.buscar_autor(autor_buscar);
+        
+        if (encontrados.empty()){
+            cout << "No se encontraron libros de ese autor.\n";
+        } else {
+            cout << "\n--- Libros encontrados de " << autor_buscar << " ---\n";
+            for(Libro* libro : encontrados){
+                cout << libro->mostrar_info() << endl;
+            }
+        }
+
+    } else if (opcion_buscar == 2) {
+        // Buscar por género
+        cout << "Escribe el genero que quieres buscar: ";
+        string genero_buscar;
+        getline(cin, genero_buscar);
+        vector<Libro*> encontrados = biblio.buscar_genero(genero_buscar);
+
+        if (encontrados.empty()){
+            cout << "No se encontraron libros de ese genero.\n";
+        } else {
+            cout << "\n--- Libros encontrados del genero " << genero_buscar << " ---\n";
+            for(Libro* libro : encontrados){
+                cout << libro->mostrar_info() << endl;
+            }
+        }
+
+    } else if (opcion_buscar == 3) {
+        // Buscar por título
+        cout << "Escribe el titulo que quieres buscar: ";
+        string titulo_buscar;
+        getline(cin, titulo_buscar);
+        vector<Libro*> encontrados = biblio.buscar_titulo(titulo_buscar);
+
+        if (encontrados.empty()){
+            cout << "No se encontraron libros con ese titulo.\n";
+        } else {
+            cout << "\n--- Libros encontrados con el titulo \"" << titulo_buscar << "\" ---\n";
+            for(Libro* libro : encontrados){
+                cout << libro->mostrar_info() << endl;
+            }
+        }
+
+    } else {
+        cout << "Opcion no valida.\n";
+    }
+    pausar();
+}
+
+
+// ============================ MAIN ================================
+int main() {
+    Biblioteca biblio;
+
+    // Al iniciar el programa, se cargan los libros desde un archivo CSV
+    biblio.leer_csv("libros.csv");
+
+    int opcion;
+    do {
+        Menu();             // Mostrar menú
+        cin >> opcion;      // Leer opción
+        cin.ignore();       // *** IMPORTANTE: Limpiar el buffer AQUÍ ***
+        limpiar_consola();  // Limpiar pantalla
+
+        // Selección según la opción
+        switch (opcion){
+            case 1: 
+                opcionMostrarLibros(biblio); 
+                break;
+            case 2:
+                opcionPrestarLibro(biblio); 
+                break;
+            case 3: 
+                opcionDevolverLibro(biblio);
+                break;
+            case 4: 
+                opcionOrdenarLibros(biblio);
+                break;
+            case 5: 
+                opcionBuscarLibros(biblio);
+                break;
+            case 6: 
+                cout << "Guardando biblioteca en libros.csv...\n";
+                biblio.guardar_csv("libros.csv");
+                cout << "Hasta luego!!!!\n";
+                break;
+            default:
+                cout << "Opcion no valida. Por favor, intenta de nuevo.\n";
+                pausar();
+                break;
+        }
+    } while (opcion != 6);
+
+    return 0;
+}
