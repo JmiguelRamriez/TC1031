@@ -1,39 +1,111 @@
-# Proyecto TC1031
-## Sistema de Gestión de Biblioteca
+# Sistema de Gestión de Biblioteca
+## Proyecto TC1031
 
-Este proyecto implementa un sistema básico de gestión para una biblioteca utilizando C++. El sistema está estructurado en tres componentes principales: la clase `Libro`, la clase `Biblioteca` y un archivo `Main.cpp` que actúa como demostración.
-
-En su estado actual, el programa tiene las siguientes funcionalidades:
-* **Gestión de Libros:** La clase `Libro` encapsula toda la información relevante de un libro, como ISBN, título, autor, año, género y la cantidad de ejemplares.
-* **Catálogo Central:** La clase `Biblioteca` maneja un catálogo de libros almacenado en un `std::vector`, funcionando como el núcleo del sistema.
-* **Operaciones del Catálogo:** Se pueden agregar nuevos libros al catálogo y mostrar la lista completa de libros o solo aquellos con ejemplares disponibles.
-* **Búsqueda:** El sistema permite buscar libros por ISBN (devuelve un único resultado), autor, género o año de publicación (devuelven múltiples resultados).
-* **Préstamos y Devoluciones:** Se ha implementado la lógica para prestar y devolver libros, actualizando la cantidad de ejemplares disponibles.
-* **Ordenamiento:** El catálogo de la biblioteca puede ser ordenado por **título** (alfabéticamente) o por **año de publicación** (ascendente).
-
-El archivo `Main.cpp` inicializa una biblioteca con 5 libros de ejemplo y ejecuta todas las funciones mencionadas para demostrar que el sistema es funcional.
+**Autor:** Jose Miguel Ramirez Gutierrez  
+**Matrícula:** A01712628  
+**Fecha:** Octubre 2025
 
 ---
 
-## Cómo Usar el Programa
+## Descripción del Avance
 
-Para compilar y ejecutar el programa, necesitarás un compilador de C++ (como g++).
+Este proyecto implementa un sistema de gestión para una biblioteca utilizando C++. El sistema permite administrar un catálogo de libros mediante estructuras de datos eficientes y algoritmos de ordenamiento optimizados.
 
-1.  **Compilación:**
-    Asegúrate de tener los tres archivos (`Libro.h`, `Biblioteca.h`, `Main.cpp`) en el mismo directorio. Abre una terminal y ejecuta el siguiente comando. Se usa el estándar C++11 por las funciones lambda utilizadas en el ordenamiento.
-    ```bash
-    g++ Main.cpp
-    ```
+### Estado Actual del Proyecto
 
-2.  **Ejecución:**
-    Una vez compilado, ejecuta el programa con el siguiente comando:
-    ```bash
-    ./a.out   # Para sistemas tipo Linux/macOS
-    a.exe     # Para sistemas Windows
-    ```
+El sistema cuenta con las siguientes funcionalidades completamente implementadas:
 
-3.  **Resultados Esperados:**
-    El programa imprimirá en la consola una serie de acciones: la lista completa de libros, los resultados de las búsquedas por ISBN, autor, género y año, y finalmente, mostrará la lista de libros ordenada primero por título y luego por año.
+**Gestión de Catálogo:**
+- Agregar libros al sistema
+- Visualizar todos los libros o solo los disponibles
+- Persistencia de datos mediante archivos CSV (carga y guardado automático)
+
+**Sistema de Búsqueda:**
+- Búsqueda por autor: encuentra todos los libros de un autor específico
+- Búsqueda por género: lista libros de un género determinado
+- Búsqueda por título: búsqueda flexible que encuentra coincidencias parciales
+
+**Ordenamiento del Catálogo:**
+- Ordenamiento alfabético por título
+- Ordenamiento cronológico por año de publicación
+- Implementación mediante `std::sort` con funciones lambda personalizadas
+
+**Préstamos y Devoluciones:**
+- Sistema de préstamo que reduce la cantidad disponible
+- Sistema de devolución que incrementa la cantidad disponible
+- Validaciones de disponibilidad y límites
+
+### Componentes del Sistema
+
+**1. Clase `Libro` (Libro.h)**
+- Encapsula la información de cada libro: título, autor, género, año de publicación, cantidad total y cantidad disponible
+- Proporciona métodos getter/setter y funciones de visualización
+
+**2. Clase `Biblioteca` (Biblioteca.h)**
+- Almacena el catálogo de libros en un `std::vector<Libro>`
+- Implementa todas las operaciones de búsqueda, ordenamiento y gestión
+- Maneja la persistencia mediante archivos CSV
+
+**3. Programa Principal (Main.cpp)**
+- Interfaz interactiva de usuario mediante menú en consola
+- Gestiona el flujo del programa y la interacción con el usuario
+- Coordina todas las operaciones del sistema
+
+---
+
+## Instrucciones de Uso
+
+### Compilación del Programa
+
+Asegúrate de tener los tres archivos (`Libro.h`, `Biblioteca.h`, `Main.cpp`) en el mismo directorio.
+
+```bash
+g++ .\Main.cpp -o biblioteca
+```
+
+
+### Ejecución
+
+```bash
+# En Linux/macOS
+./biblioteca
+
+# En Windows
+biblioteca.exe
+```
+
+### Uso del Sistema
+
+Al ejecutar el programa, aparecerá un menú con 6 opciones:
+
+```
+1. Mostrar todos los libros disponibles
+2. Pedir prestado un libro
+3. Devolver libros
+4. Ordenar los libros
+5. Buscar los libros
+6. SALIR y Guardar
+```
+
+**Flujo de uso:**
+1. El programa carga automáticamente los libros desde `libros.csv` (si existe)
+2. Selecciona una opción ingresando el número correspondiente
+3. Sigue las instrucciones en pantalla para cada operación
+4. Al seleccionar la opción 6, el programa guarda automáticamente todos los cambios
+
+### Formato del Archivo CSV
+
+El archivo `libros.csv` utiliza el siguiente formato:
+```
+titulo,autor,genero,año,cantidad_total,cantidad_disponible
+```
+
+Ejemplo:
+```
+Cien Años de Soledad,Gabriel Garcia Marquez,Realismo Magico,1967,5,3
+1984,George Orwell,Distopia,1949,4,4
+El Principito,Antoine de Saint-Exupery,Fabula,1943,3,2
+```
 
 ---
 
@@ -41,22 +113,76 @@ Para compilar y ejecutar el programa, necesitarás un compilador de C++ (como g+
 
 ### SICT0301: Evalúa los componentes
 
-**Análisis de complejidad de los algoritmos de ordenamiento usados en el programa.**
+**Hace un análisis de complejidad correcto y completo para los algoritmos de ordenamiento usados en el programa.**
 
-El programa utiliza el algoritmo `std::sort` de la librería estándar de C++ (`<algorithm>`) para ordenar el catálogo de libros. Este no es un algoritmo simple, sino una implementación altamente optimizada, generalmente **Introsort (Ordenamiento introspectivo)**.
+El programa utiliza `std::sort` de la biblioteca estándar de C++, que implementa el algoritmo **Introsort** (Ordenamiento Introspectivo). A continuación se presenta el análisis completo de complejidad:
 
-`Introsort` es un algoritmo híbrido que combina las fortalezas de tres algoritmos de ordenamiento: Quicksort, Heapsort y Insertion Sort.
-* Comienza con **Quicksort** por su excelente rendimiento en el caso promedio. Su complejidad es O(n log n) en tiempo y O(log n) en espacio para la pila de recursión.
-* Si la recursión de Quicksort se profundiza demasiado (lo que podría llevar a un rendimiento de O(n²)), `Introsort` cambia a **Heapsort** para garantizar la complejidad de O(n log n) en el peor de los casos.
-* Para subproblemas muy pequeños (por ejemplo, menos de 16 elementos), `Introsort` cambia a **Insertion Sort**, que es más eficiente para conjuntos de datos pequeños.
+#### Descripción del Algoritmo: Introsort
 
-Gracias a esta combinación, la complejidad de `std::sort` es:
+Introsort es un algoritmo híbrido que combina tres algoritmos de ordenamiento para garantizar eficiencia en todos los escenarios:
 
-* **Complejidad Temporal (Tiempo):**
-    * **Mejor de los casos:** O(n log n)
-    * **Caso Promedio:** O(n log n)
-    * **Peor de los casos:** O(n log n)
-* **Complejidad Espacial (Memoria):** O(log n), debido al espacio requerido por la pila de recursión de Quicksort.
+1. **Quicksort** - Utilizado como algoritmo principal por su excelente rendimiento promedio
+   - Divide el arreglo en particiones usando un pivote
+   - Complejidad promedio: O(n log n)
+   
+2. **Heapsort** - Activado como respaldo cuando la recursión se profundiza demasiado
+   - Evita la degradación a O(n²) que puede ocurrir con Quicksort
+   - Garantiza el peor caso de O(n log n)
+   
+3. **Insertion Sort** - Aplicado para subproblemas pequeños (típicamente < 16 elementos)
+   - Más eficiente que Quicksort para conjuntos de datos pequeños
+   - Reduce el overhead de la recursión
+
+#### Análisis de Complejidad Temporal
+
+**Mejor Caso: O(n log n)**
+- Ocurre cuando los pivotes de Quicksort dividen el arreglo de manera balanceada
+- El arreglo se divide en log n niveles
+- En cada nivel se realizan n comparaciones
+- Total: n × log n comparaciones
+
+**Caso Promedio: O(n log n)**
+- Quicksort maneja la mayoría de los casos con particiones razonablemente balanceadas
+- El comportamiento promedio se mantiene en O(n log n)
+- La probabilidad de degradación es extremadamente baja
+
+**Peor Caso: O(n log n)**
+- Si Quicksort comienza a degradarse (recursión profunda), Introsort cambia a Heapsort
+- Heapsort garantiza O(n log n) en el peor caso
+- Esta es la ventaja principal sobre Quicksort puro, que tiene peor caso O(n²)
+
+#### Análisis de Complejidad Espacial
+
+**Espacio: O(log n)**
+- Corresponde al espacio utilizado por la pila de recursión
+- En el peor caso, la profundidad de recursión es log n
+- El algoritmo realiza ordenamiento in-place, no requiere arreglos auxiliares grandes
+
+#### Implementación en el Proyecto
+
+El programa utiliza `std::sort` en dos funciones:
+
+```cpp
+// Ordenamiento por título (alfabético)
+void Biblioteca::ordenar_titulo() {
+    sort(libros.begin(), libros.end(), [](const Libro& a, const Libro& b) {
+        return a.get_titulo() < b.get_titulo(); 
+    });
+}
+```
+Complejidad: O(n log n) donde n es el número de libros
+
+```cpp
+// Ordenamiento por año de publicación (cronológico)
+void Biblioteca::ordenar_anio() {
+    sort(libros.begin(), libros.end(), [](const Libro& a, const Libro& b) {
+        return a.get_anio_publicacion() < b.get_anio_publicacion();
+    });
+}
+```
+Complejidad: O(n log n) donde n es el número de libros
+
+Ambas funciones tienen el mismo análisis de complejidad porque utilizan el mismo algoritmo base (`std::sort`), solo cambia el criterio de comparación mediante las funciones lambda.
 
 ---
 
@@ -64,12 +190,75 @@ Gracias a esta combinación, la complejidad de `std::sort` es:
 
 **Selecciona un algoritmo de ordenamiento adecuado al problema y lo usa correctamente.**
 
-La selección de `std::sort` es una decisión adecuada para este problema por las siguientes razones:
+#### Justificación de la Selección
 
-1.  **Eficiencia y Escalabilidad:** Con una complejidad garantizada de O(n log n), el algoritmo es lo suficientemente rápido para manejar catálogos de bibliotecas de cualquier tamaño, desde unos pocos libros hasta miles. A diferencia de algoritmos O(n²) como el ordenamiento de burbuja, `std::sort` no se degradará significativamente a medida que la cantidad de libros aumente.
+La elección de `std::sort` (Introsort) es la más adecuada para este problema por las siguientes razones:
 
-2.  **Uso de la Biblioteca Estándar:** Utilizar un algoritmo de la biblioteca estándar es una decisión de ingeniería sólida. `std::sort` está probado, depurado y optimizado por los desarrolladores del compilador. Esto evita la necesidad de "reinventar la rueda" y reduce la probabilidad de introducir errores que podrían surgir al implementar un algoritmo de ordenamiento desde cero.
+**1. Eficiencia Garantizada**
+- Complejidad O(n log n) garantizada en todos los casos (mejor, promedio y peor)
+- Escalable para bibliotecas de cualquier tamaño, desde decenas hasta miles de libros
+- Muy superior a algoritmos O(n²) como Bubble Sort o Selection Sort, que se degradarían rápidamente con catálogos grandes
 
-3.  **Flexibilidad:** El problema requiere ordenar por diferentes criterios (título y año). `std::sort` es ideal para esto, ya que permite pasar una **función de comparación personalizada**. Este enfoque demuestra el uso **correcto y avanzado** del algoritmo, ya que se adapta fácilmente a las necesidades específicas del problema sin requerir cambios estructurales. La selección y aplicación de `std::sort` son, por lo tanto, óptimas para los requisitos del proyecto.
+Comparación de rendimiento para n = 1000 libros:
+- Bubble Sort: ~1,000,000 operaciones (O(n²))
+- Introsort: ~10,000 operaciones (O(n log n))
+- Diferencia: 100 veces más rápido
+
+**2. Uso de Biblioteca Estándar**
+- `std::sort` es una implementación probada y optimizada por los desarrolladores del compilador
+- Evita errores comunes al implementar algoritmos desde cero
+- Código más mantenible y fácil de entender para otros programadores
+- Reduce significativamente el tiempo de desarrollo
+
+**3. Flexibilidad mediante Funciones Lambda**
+- Permite ordenar por múltiples criterios sin duplicar código
+- Las funciones lambda hacen el código expresivo y legible
+- Fácil de extender para nuevos criterios de ordenamiento
+
+**4. Adaptabilidad al Problema**
+- El sistema requiere ordenar por diferentes atributos (título y año)
+- `std::sort` se adapta perfectamente mediante comparadores personalizados
+- No requiere cambios estructurales para agregar nuevos criterios
+
+#### Uso Correcto del Algoritmo
+
+El programa demuestra el uso correcto de `std::sort` mediante:
+
+**Sintaxis Apropiada:**
+```cpp
+sort(libros.begin(), libros.end(), comparador)
+```
+- `libros.begin()`: iterador al inicio del vector
+- `libros.end()`: iterador al final del vector
+- `comparador`: función lambda que define el criterio de ordenamiento
+
+**Comparadores Correctos:**
+- Retornan `true` si el primer elemento debe ir antes que el segundo
+- Implementan relaciones de orden estricto (a < b)
+- Garantizan ordenamiento estable y correcto
+
+**Orden Ascendente:**
+Ambos ordenamientos están implementados en orden ascendente:
+- Títulos: orden alfabético A-Z
+- Años: orden cronológico (más antiguos primero)
+
+Este es el comportamiento esperado para un sistema de biblioteca, facilitando la búsqueda y navegación del catálogo.
+
+#### Alternativas Consideradas y Descartadas
+
+**Bubble Sort / Selection Sort:**
+- Complejidad O(n²) inaceptable para catálogos grandes
+- Ineficientes incluso para catálogos medianos
+
+**Merge Sort:**
+- Complejidad O(n log n) pero requiere O(n) espacio adicional
+- Menos eficiente en la práctica que Introsort
+- `std::sort` es superior en todos los aspectos
+
+**Quick Sort puro:**
+- Peor caso O(n²) podría causar problemas
+- Introsort (usado por `std::sort`) resuelve esta limitación
+
+La selección de `std::sort` es, por lo tanto, **la decisión óptima** para este proyecto, cumpliendo con eficiencia, corrección y mejores prácticas de programación.
 
 ---
