@@ -1,28 +1,39 @@
 /*
  * Biblioteca.h
  *
- *  Created on: 02/10/2025
- *      Author: Jose Miguel Ramirez Gutierrez A01712628
+ * Created on: 02/10/2025
+ * Author: Jose Miguel Ramirez Gutierrez A01712628
  */
 
 #ifndef BIBLIOTECA_H
 #define BIBLIOTECA_H
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <stdexcept> 
 #include "Libro.h"
 
 using namespace std;
 
+struct Nodo {
+    Libro data;
+    Nodo* siguiente;
+    Nodo* anterior;
+
+    Nodo(const Libro& l) : data(l), siguiente(nullptr), anterior(nullptr) {}
+};
+
 class Biblioteca {
     private:
-        // Vector que contiene todos los libros de la biblioteca.
-        vector<Libro> libros;
+        // Punteros al inicio y fin de la Lista Doblemente Ligada.
+        Nodo* cabeza;
+        Nodo* cola;
+        int tamano; // Para llevar la cuenta de libros fácilmente
         
     public:
         Biblioteca();
+        ~Biblioteca(); // Destructor para liberar memoria
 
         void agregar_libro(const Libro& libro);
         void mostrar_todos_libros();
@@ -43,104 +54,127 @@ class Biblioteca {
 
 /*
  * Biblioteca() - Constructor por defecto.
- * Complejidad temporal:
- * - Mejor caso: O(1)
- * - Caso promedio: O(1)
- * - Peor caso: O(1)
- * Descripcion: Inicializa una biblioteca vacia. El vector de libros se inicializa
- * automáticamente como vacío, por lo que la operación es de tiempo constante.
+ * Complejidad temporal: O(1)
  */
-Biblioteca::Biblioteca() {}
+Biblioteca::Biblioteca() : cabeza(nullptr), cola(nullptr), tamano(0) {}
 
 /*
- * agregar_libro() - Agrega un libro al vector de libros.
- * Complejidad temporal:
- * - Mejor caso: O(1)
- * - Caso promedio: O(1)
- * - Peor caso: O(n) (si el vector necesita redimensionarse)
- * Descripcion: Inserta un libro al final del vector. En el caso promedio es O(1),
- * pero si el vector necesita redimensionarse para acomodar más elementos,
- * puede ser O(n) debido a la reasignación de memoria y copia de elementos.
+ * ~Biblioteca() - Destructor.
+ * Complejidad temporal: O(n)
+ * Descripcion: Libera la memoria de todos los nodos de la lista para evitar memory leaks.
  */
-void Biblioteca::agregar_libro(const Libro& libro) {
-    libros.push_back(libro);
+Biblioteca::~Biblioteca() {
+    Nodo* actual = cabeza;
+    Nodo* siguiente;
+    while (actual != nullptr) {
+        siguiente = actual->siguiente;
+        delete actual;
+        actual = siguiente;
+    }
+    cabeza = nullptr;
+    cola = nullptr;
+    tamano = 0;
 }
 
 /*
- * mostrar_todos_libros() - Muestra todos los libros de la biblioteca.
- * Complejidad temporal:
- * - Mejor caso: O(n)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripcion: Recorre el vector completo de libros e imprime la información de cada uno.
- * La complejidad es lineal respecto al número de libros en la biblioteca.
+ * agregar_libro() - Agrega un libro al final de la lista.
+ * Complejidad temporal: O(1)
+ * Descripcion: Se aprovecha el puntero 'cola' para realizar una inserción
+ * constante al final de la lista.
+ */
+void Biblioteca::agregar_libro(const Libro& libro) {
+    Nodo* nuevo_nodo = new Nodo(libro);
+    if (cabeza == nullptr) {
+        cabeza = nuevo_nodo;
+        cola = nuevo_nodo;
+    } else {
+        cola->siguiente = nuevo_nodo;
+        nuevo_nodo->anterior = cola;
+        cola = nuevo_nodo;
+    }
+    tamano++;
+}
+
+/*
+ * mostrar_todos_libros() - Muestra todos los libros.
+ * Complejidad temporal: O(n)
  */
 void Biblioteca::mostrar_todos_libros() {
-    for (int i = 0; i < libros.size(); i++) {
-        cout << libros[i].mostrar_info() << endl;
+    Nodo* actual = cabeza;
+    while (actual != nullptr) {
+        cout << actual->data.mostrar_info() << endl;
+        actual = actual->siguiente;
     }
 }
 
 /*
  * mostrar_disponibles() - Muestra solo los libros con ejemplares disponibles.
- * Complejidad temporal:
- * - Mejor caso: O(n)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripcion: Recorre todo el vector de libros y muestra solo aquellos que tienen
- * al menos un ejemplar disponible para préstamo. La complejidad es lineal.
+ * Complejidad temporal: O(n)
  */
 void Biblioteca::mostrar_disponibles() {
     bool hay_disponible = false;
-
-    for (int i = 0; i < libros.size(); i++) {
-        if (libros[i].get_cantidad_disponible() > 0) {
-            cout << libros[i].mostrar_info() << endl;
+    Nodo* actual = cabeza;
+    while (actual != nullptr) {
+        if (actual->data.get_cantidad_disponible() > 0) {
+            cout << actual->data.mostrar_info() << endl;
             hay_disponible = true;
         }
+        actual = actual->siguiente;
     }
+}
+
+// Función auxiliar para intercambiar la data de dos nodos (usada para ordenar)
+void swap_libro_data(Nodo* a, Nodo* b) {
+    Libro temp = a->data;
+    a->data = b->data;
+    b->data = temp;
 }
 
 /*
  * ordenar_titulo() - Ordena los libros alfabéticamente por título.
- * Complejidad temporal:
- * - Mejor caso: O(n log n)
- * - Caso promedio: O(n log n)
- * - Peor caso: O(n log n)
- * Descripcion: Utiliza el algoritmo sort de la STL con una función lambda
- * para ordenar por título. La complejidad es O(n log n) tipica de los
- * algoritmos de ordenamiento eficientes.
+ * Complejidad temporal: O(n^2)
+ * Descripcion: Se utiliza una variante de Selection Sort que intercambia los
+ * datos de los nodos. Para una lista ligada, este algoritmo es más simple de
+ * implementar que Merge Sort y tiene una complejidad cuadrática.
  */
 void Biblioteca::ordenar_titulo() {
-    sort(libros.begin(), libros.end(), [](const Libro& a, const Libro& b) {
-        return a.get_titulo() < b.get_titulo(); 
-    });
+    Nodo* i = cabeza;
+    while (i != nullptr) {
+        Nodo* j = i->siguiente;
+        while (j != nullptr) {
+            if (i->data.get_titulo() > j->data.get_titulo()) {
+                swap_libro_data(i, j);
+            }
+            j = j->siguiente;
+        }
+        i = i->siguiente;
+    }
 }
 
 /*
  * ordenar_anio() - Ordena los libros por año de publicación.
- * Complejidad temporal:
- * - Mejor caso: O(n log n)
- * - Caso promedio: O(n log n)
- * - Peor caso: O(n log n)
- * Descripcion: Utiliza el algoritmo sort de la STL con una función lambda
- * para ordenar por año. La complejidad es O(n log n).
+ * Complejidad temporal: O(n^2)
+ * Descripcion: Selection Sort con criterio de año, resultando en complejidad cuadrática.
  */
 void Biblioteca::ordenar_anio() {
-    sort(libros.begin(), libros.end(), [](const Libro& a, const Libro& b) {
-        return a.get_anio_publicacion() < b.get_anio_publicacion();
-    });
+    Nodo* i = cabeza;
+    while (i != nullptr) {
+        Nodo* j = i->siguiente;
+        while (j != nullptr) {
+            if (i->data.get_anio_publicacion() > j->data.get_anio_publicacion()) {
+                swap_libro_data(i, j);
+            }
+            j = j->siguiente;
+        }
+        i = i->siguiente;
+    }
 }
 
 /*
  * leer_csv() - Carga libros desde un archivo CSV.
- * Complejidad temporal:
- * - Mejor caso: O(n * m)
- * - Caso promedio: O(n * m)
- * - Peor caso: O(n * m)
- * Descripcion: Lee un archivo CSV línea por línea, donde n es el número de líneas
- * y m es la longitud promedio de cada línea. Por cada línea, parsea los campos
- * separados por comas y crea un objeto Libro. La complejidad total es O(n * m).
+ * Complejidad temporal: O(n * m)
+ * Descripcion: Incluye la lógica de liberación de memoria antes de cargar
+ * y utiliza la operación O(1) de agregar al final de la lista.
  */
 void Biblioteca::leer_csv(const string& filename) {
     ifstream inFile(filename);
@@ -150,41 +184,55 @@ void Biblioteca::leer_csv(const string& filename) {
         return;
     }
 
+    // Limpiar la lista existente y liberar memoria
+    Nodo* actual_del = cabeza;
+    Nodo* siguiente_del;
+    while (actual_del != nullptr) {
+        siguiente_del = actual_del->siguiente;
+        delete actual_del;
+        actual_del = siguiente_del;
+    }
+    cabeza = nullptr;
+    cola = nullptr;
+    tamano = 0;
+
     string linea;
+    int libros_cargados = 0;
     while (getline(inFile, linea)) {
         stringstream ss(linea);
         string titulo, autor, genero, anio_str, cant_total_str, cant_disponible_str;
 
-        // Leer cada campo separado por comas como string
-        getline(ss, titulo, ',');
-        getline(ss, autor, ',');
-        getline(ss, genero, ',');
-        getline(ss, anio_str, ',');
-        getline(ss, cant_total_str, ',');
-        getline(ss, cant_disponible_str, ',');
+        if (getline(ss, titulo, ',') &&
+            getline(ss, autor, ',') &&
+            getline(ss, genero, ',') &&
+            getline(ss, anio_str, ',') &&
+            getline(ss, cant_total_str, ',') &&
+            getline(ss, cant_disponible_str, ',')) {
 
-        // Convertir strings a enteros
-        int anio = stoi(anio_str);
-        int cant_total = stoi(cant_total_str);
-        int cant_disponible = stoi(cant_disponible_str);
+            try {
+                int anio = stoi(anio_str);
+                int cant_total = stoi(cant_total_str);
+                int cant_disponible = stoi(cant_disponible_str);
 
-        // Crear el libro y agregarlo
-        Libro libro(titulo, autor, genero, anio, cant_total, cant_disponible);
-        libros.push_back(libro);
+                Libro libro(titulo, autor, genero, anio, cant_total, cant_disponible);
+                agregar_libro(libro); 
+                libros_cargados++;
+
+            } catch (const invalid_argument& e) {
+                cerr << "Error de formato en la línea: " << linea << ". Ignorando libro." << endl;
+            } catch (const out_of_range& e) {
+                cerr << "Error de rango en la línea: " << linea << ". Ignorando libro." << endl;
+            }
+        }
     }
 
     inFile.close();
-    cout << "Se cargaron " << libros.size() << " libros desde " << filename << endl;
+    cout << "Se cargaron " << libros_cargados << " libros desde " << filename << endl;
 }
 
 /*
- * guardar_csv() - Guarda los libros de la biblioteca en un archivo CSV.
- * Complejidad temporal:
- * - Mejor caso: O(n)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripcion: Recorre el vector de libros y escribe la informacion de cada uno
- * en formato CSV. La complejidad es lineal respecto al número de libros.
+ * guardar_csv() - Guarda los libros en un archivo CSV.
+ * Complejidad temporal: O(n)
  */
 void Biblioteca::guardar_csv(const string& filename) {
     ofstream outFile(filename);
@@ -193,13 +241,15 @@ void Biblioteca::guardar_csv(const string& filename) {
         return;
     }
 
-    for (const Libro& l: libros) {
-        outFile << l.get_titulo() << "," 
-                << l.get_autor() << "," 
-                << l.get_genero() << "," 
-                << l.get_anio_publicacion() << "," 
-                << l.get_cantidad_total() << "," 
-                << l.get_cantidad_disponible() << endl;
+    Nodo* actual = cabeza;
+    while (actual != nullptr) {
+        outFile << actual->data.get_titulo() << "," 
+                << actual->data.get_autor() << "," 
+                << actual->data.get_genero() << "," 
+                << actual->data.get_anio_publicacion() << "," 
+                << actual->data.get_cantidad_total() << "," 
+                << actual->data.get_cantidad_disponible() << endl;
+        actual = actual->siguiente;
     }
 
     outFile.close();
@@ -207,135 +257,111 @@ void Biblioteca::guardar_csv(const string& filename) {
 }
 
 /*
- * prestar_libro() - Presta un libro reduciendo su cantidad disponible en 1.
- * Complejidad temporal:
- * - Mejor caso: O(1) (si el libro está en la primera posición)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripcion: Busca un libro por título en el vector. Si lo encuentra y hay
- * ejemplares disponibles, reduce la cantidad disponible en 1. La búsqueda
- * lineal hace que la complejidad sea O(n) en el caso promedio.
+ * prestar_libro() - Presta un libro.
+ * Complejidad temporal: O(n)
  */
 bool Biblioteca::prestar_libro(const string& titulo) {
-    for (size_t i = 0; i < libros.size(); i++) {
-        if (libros[i].get_titulo() == titulo) {
-            if (libros[i].get_cantidad_disponible() > 0) {
-                libros[i].set_cantidad_disponible(libros[i].get_cantidad_disponible() - 1);
-                cout << "Se presto el libro: " << titulo << endl;
+    Nodo* actual = cabeza;
+    while (actual != nullptr) {
+        if (actual->data.get_titulo() == titulo) {
+            if (actual->data.get_cantidad_disponible() > 0) {
+                actual->data.set_cantidad_disponible(actual->data.get_cantidad_disponible() - 1);
+                cout << "Se prestó el libro: " << titulo << endl;
                 return true; 
             } else {
                 cout << "No hay ejemplares disponibles de: " << titulo << endl;
                 return false; 
             }
         }
+        actual = actual->siguiente;
     }
-    cout << "No se encontro el libro con titulo: " << titulo << endl;
+    cout << "No se encontró el libro con título: " << titulo << endl;
     return false; 
 }
 
 /*
- * devolver_libro() - Devuelve un libro aumentando su cantidad disponible en 1.
- * Complejidad temporal:
- * - Mejor caso: O(1) (si el libro está en la primera posición)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripcion: Busca un libro por título. Si lo encuentra y la cantidad disponible
- * es menor que el total, incrementa la cantidad disponible en 1. La búsqueda
- * lineal resulta en complejidad O(n) en el caso promedio.
+ * devolver_libro() - Devuelve un libro.
+ * Complejidad temporal: O(n)
  */
 bool Biblioteca::devolver_libro(const string& titulo) {
-    for (size_t i = 0; i < libros.size(); i++) {
-        if (libros[i].get_titulo() == titulo) {
-            if (libros[i].get_cantidad_disponible() < libros[i].get_cantidad_total()) {
-                libros[i].set_cantidad_disponible(libros[i].get_cantidad_disponible() + 1);
-                cout << "Se devolvio el libro: " << titulo << endl;
+    Nodo* actual = cabeza;
+    while (actual != nullptr) {
+        if (actual->data.get_titulo() == titulo) {
+            if (actual->data.get_cantidad_disponible() < actual->data.get_cantidad_total()) {
+                actual->data.set_cantidad_disponible(actual->data.get_cantidad_disponible() + 1);
+                cout << "Se devolvió el libro: " << titulo << endl;
                 return true; 
             } else {
-                cout << "Todos los ejemplares de " << titulo << " ya estan en la biblioteca." << endl;
+                cout << "Todos los ejemplares de " << titulo << " ya están en la biblioteca." << endl;
                 return false; 
             }
         }
+        actual = actual->siguiente;
     }
-    cout << "No se encontro el libro con titulo: " << titulo << endl;
+    cout << "No se encontró el libro con título: " << titulo << endl;
     return false;
 }
 
 /*
- * buscar_autor() - Busca todos los libros de un autor especifico.
- * Complejidad temporal:
- * - Mejor caso: O(n)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripcion: Recorre todo el vector de libros y retorna un vector de punteros
- * a aquellos libros cuyo autor coincida con el buscado. La complejidad es lineal
- * ya que debe verificar todos los libros.
+ * buscar_autor() - Busca todos los libros de un autor.
+ * Complejidad temporal: O(n)
  */
 vector<Libro*> Biblioteca::buscar_autor(const string& autor) {
     vector<Libro*> encontrados;
-    for (size_t i = 0; i < libros.size(); i++) {
-        if (libros[i].get_autor() == autor) {
-            encontrados.push_back(&libros[i]);
+    Nodo* actual = cabeza;
+    while (actual != nullptr) {
+        if (actual->data.get_autor() == autor) {
+            encontrados.push_back(&(actual->data));
         }
+        actual = actual->siguiente;
     }
     return encontrados;
 }
 
 /*
- * buscar_genero() - Busca todos los libros de un género especifico.
- * Complejidad temporal:
- * - Mejor caso: O(n)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripcion: Recorre todo el vector de libros y retorna un vector de punteros
- * a aquellos libros cuyo género coincida con el buscado. La complejidad es lineal.
+ * buscar_genero() - Busca todos los libros de un género.
+ * Complejidad temporal: O(n)
  */
 vector<Libro*> Biblioteca::buscar_genero(const string& genero) {
     vector<Libro*> encontrados;
-    for (size_t i = 0; i < libros.size(); i++) {
-        if (libros[i].get_genero() == genero) {
-            encontrados.push_back(&libros[i]);
+    Nodo* actual = cabeza;
+    while (actual != nullptr) {
+        if (actual->data.get_genero() == genero) {
+            encontrados.push_back(&(actual->data));
         }
+        actual = actual->siguiente;
     }
     return encontrados;
 }
 
 /*
  * buscar_titulo() - Busca libros cuyo titulo contenga una cadena específica.
- * Complejidad temporal:
- * - Mejor caso: O(n * m)
- * - Caso promedio: O(n * m)
- * - Peor caso: O(n * m)
- * Descripcion: Recorre todos los libros (n) y para cada uno ejecuta la función
- * find() que tiene complejidad O(m) donde m es la longitud del título.
- * Retorna un vector de punteros a los libros que contienen la cadena buscada.
+ * Complejidad temporal: O(n * m)
  */
 vector<Libro*> Biblioteca::buscar_titulo(const string& titulo) {
     vector<Libro*> encontrados;
-    for (size_t i = 0; i < libros.size(); i++) {
-        // Búsqueda que incluye titulos que contengan la cadena buscada
-        if (libros[i].get_titulo().find(titulo) != string::npos) {
-            encontrados.push_back(&libros[i]);
+    Nodo* actual = cabeza;
+    while (actual != nullptr) {
+        if (actual->data.get_titulo().find(titulo) != string::npos) {
+            encontrados.push_back(&(actual->data));
         }
+        actual = actual->siguiente;
     }
     return encontrados;
 }
 
 /*
  * bucar_anio() - Busca todos los libros publicados en un año especifico.
- * Complejidad temporal:
- * - Mejor caso: O(n)
- * - Caso promedio: O(n)
- * - Peor caso: O(n)
- * Descripcion: Recorre todo el vector de libros y retorna un vector de punteros
- * a aquellos libros cuyo año de publicación coincida con el buscado.
- * La complejidad es lineal.
+ * Complejidad temporal: O(n)
  */
 vector<Libro*> Biblioteca::bucar_anio(const int anio) {
     vector<Libro*> encontrados;
-    for (size_t i = 0; i < libros.size(); i++) {
-        if (libros[i].get_anio_publicacion() == anio) {
-            encontrados.push_back(&libros[i]);
+    Nodo* actual = cabeza;
+    while (actual != nullptr) {
+        if (actual->data.get_anio_publicacion() == anio) {
+            encontrados.push_back(&(actual->data));
         }
+        actual = actual->siguiente;
     }
     return encontrados;
 }
