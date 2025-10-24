@@ -7,7 +7,7 @@
 
 ## Descripción del Avance
 
-Este avance del proyecto se enfoca en la implementación de una **Lista Doblemente Ligada** como la estructura principal para almacenar el catálogo de libros, reemplazando el `std::vector` anterior. Este cambio permite una gestión de memoria más dinámica y sienta las bases para futuras operaciones de inserción y eliminación en tiempo constante ($O(1)$).
+Este avance del proyecto se enfoca en la implementación de una **Lista Doblemente Ligada** como la estructura principal para almacenar el catálogo de libros, reemplazando el `std::vector` anterior. Este cambio permite una gestión de memoria más dinámica y sienta las bases para futuras operaciones de inserción y eliminación en tiempo constante (O(1)).
 
 ### Estado Actual del Proyecto
 
@@ -19,12 +19,12 @@ El sistema mantiene las siguientes funcionalidades, ahora implementadas sobre la
 - El destructor (`~Biblioteca()`) libera correctamente la memoria de todos los nodos.
 
 **Gestión de Catálogo y Persistencia:**
-- **Agregar Libros:** Operación $O(1)$ utilizando el puntero `cola`.
-- **Visualizar:** Recorrido lineal $O(n)$ de la lista ligada.
+- **Agregar Libros:** Operación O(1) utilizando el puntero `cola`.
+- **Visualizar:** Recorrido lineal O(n) de la lista ligada.
 - **Persistencia de datos:** Los métodos `leer_csv` y `guardar_csv` han sido adaptados para recorrer y construir la lista ligada dinámicamente.
 
 **Búsqueda y Ordenamiento:**
-- **Búsqueda por atributos:** Todas las búsquedas (`autor`, `género`, `título`, `año`) se realizan mediante un recorrido lineal $O(n)$ de la lista.
+- **Búsqueda por atributos:** Todas las búsquedas (`autor`, `género`, `título`, `año`) se realizan mediante un recorrido lineal O(n) de la lista.
 - **Ordenamiento:** Los métodos `ordenar_titulo` y `ordenar_anio` han sido reimplementados utilizando un algoritmo de ordenamiento simple (**Selection Sort** por intercambio de data) adecuado para listas ligadas.
 
 ---
