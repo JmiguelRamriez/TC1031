@@ -3,53 +3,29 @@
 
 **Autor:** Jose Miguel Ramirez Gutierrez  
 **Matrícula:** A01712628  
-**Fecha:** Octubre 2025
-
 ---
 
 ## Descripción del Avance
 
-Este proyecto implementa un sistema de gestión para una biblioteca utilizando C++. El sistema permite administrar un catálogo de libros mediante estructuras de datos eficientes y algoritmos de ordenamiento optimizados.
+Este avance del proyecto se enfoca en la implementación de una **Lista Doblemente Ligada** como la estructura principal para almacenar el catálogo de libros, reemplazando el `std::vector` anterior. Este cambio permite una gestión de memoria más dinámica y sienta las bases para futuras operaciones de inserción y eliminación en tiempo constante ($O(1)$).
 
 ### Estado Actual del Proyecto
 
-El sistema cuenta con las siguientes funcionalidades completamente implementadas:
+El sistema mantiene las siguientes funcionalidades, ahora implementadas sobre la Lista Doblemente Ligada:
 
-**Gestión de Catálogo:**
-- Agregar libros al sistema
-- Visualizar todos los libros o solo los disponibles
-- Persistencia de datos mediante archivos CSV (carga y guardado automático)
+**Estructura de Datos:**
+- Catálogo almacenado en una **Lista Doblemente Ligada** personalizada (`Nodo* cabeza`, `Nodo* cola`).
+- El constructor (`Biblioteca()`) inicializa los punteros a `nullptr`.
+- El destructor (`~Biblioteca()`) libera correctamente la memoria de todos los nodos.
 
-**Sistema de Búsqueda:**
-- Búsqueda por autor: encuentra todos los libros de un autor específico
-- Búsqueda por género: lista libros de un género determinado
-- Búsqueda por título: búsqueda flexible que encuentra coincidencias parciales
+**Gestión de Catálogo y Persistencia:**
+- **Agregar Libros:** Operación $O(1)$ utilizando el puntero `cola`.
+- **Visualizar:** Recorrido lineal $O(n)$ de la lista ligada.
+- **Persistencia de datos:** Los métodos `leer_csv` y `guardar_csv` han sido adaptados para recorrer y construir la lista ligada dinámicamente.
 
-**Ordenamiento del Catálogo:**
-- Ordenamiento alfabético por título
-- Ordenamiento cronológico por año de publicación
-- Implementación mediante `std::sort` con funciones lambda personalizadas
-
-**Préstamos y Devoluciones:**
-- Sistema de préstamo que reduce la cantidad disponible
-- Sistema de devolución que incrementa la cantidad disponible
-- Validaciones de disponibilidad y límites
-
-### Componentes del Sistema
-
-**1. Clase `Libro` (Libro.h)**
-- Encapsula la información de cada libro: título, autor, género, año de publicación, cantidad total y cantidad disponible
-- Proporciona métodos getter/setter y funciones de visualización
-
-**2. Clase `Biblioteca` (Biblioteca.h)**
-- Almacena el catálogo de libros en un `std::vector<Libro>`
-- Implementa todas las operaciones de búsqueda, ordenamiento y gestión
-- Maneja la persistencia mediante archivos CSV
-
-**3. Programa Principal (Main.cpp)**
-- Interfaz interactiva de usuario mediante menú en consola
-- Gestiona el flujo del programa y la interacción con el usuario
-- Coordina todas las operaciones del sistema
+**Búsqueda y Ordenamiento:**
+- **Búsqueda por atributos:** Todas las búsquedas (`autor`, `género`, `título`, `año`) se realizan mediante un recorrido lineal $O(n)$ de la lista.
+- **Ordenamiento:** Los métodos `ordenar_titulo` y `ordenar_anio` han sido reimplementados utilizando un algoritmo de ordenamiento simple (**Selection Sort** por intercambio de data) adecuado para listas ligadas.
 
 ---
 
@@ -110,7 +86,7 @@ El Principito,Antoine de Saint-Exupery,Fabula,1943,3,2
 ---
 
 ## Cumplimiento de Sub-competencias
-
+## Primer avance
 ### SICT0301: Evalúa los componentes
 
 **Hace un análisis de complejidad correcto y completo para los algoritmos de ordenamiento usados en el programa.**
@@ -261,4 +237,31 @@ Este es el comportamiento esperado para un sistema de biblioteca, facilitando la
 
 La selección de `std::sort` es, por lo tanto, **la decisión óptima** para este proyecto, cumpliendo con eficiencia, corrección y mejores prácticas de programación.
 
+## Segundo avance
+
+### SICT0301: Evalúa los componentes
+
+Se analizó la estructura utilizada (lista doblemente ligada) y sus operaciones básicas.  
+La inserción en el inicio o en el final tiene complejidad constante, es decir O(1).  
+La eliminación en el inicio o en el final también es O(1).  
+El recorrido secuencial tiene complejidad O(n) porque se debe avanzar nodo por nodo.  
+La búsqueda también es O(n) por el mismo motivo.
+
+Esta estructura es adecuada porque permite un manejo dinámico del catálogo sin necesidad de reacomodar memoria como ocurre con los arreglos. Dado que el sistema requiere agregar, recorrer y modificar elementos en tiempo de ejecución, esta elección reduce el costo computacional en comparación con otras opciones menos flexibles.
+
+
+### SICT0302: Toma decisiones
+
+La lista doblemente ligada fue seleccionada debido a que el proyecto necesita navegación en ambos sentidos y inserciones y eliminaciones eficientes sin reacomodación de memoria.  
+Además, permite futuras extensiones, como paginación o navegación tipo “historial”.  
+En comparación con un `vector`, evita realocaciones de memoria; y en comparación con una lista simplemente ligada, mejora la navegación al tener enlaces tanto al nodo anterior como al siguiente.
+
+Esta elección demuestra el uso correcto del criterio algorítmico y estructural al adaptar la solución a las necesidades reales del sistema.
+
+
+### SICT0303: Implementa acciones científicas
+
+Se implementaron mecanismos de consulta recorriendo la estructura desde el primer nodo hasta el último, y también en sentido inverso cuando es necesario.  
+Los datos se cargan correctamente desde el archivo CSV y se insertan dentro de la estructura, lo que asegura la correcta integración entre persistencia y modelo en memoria.  
+Finalmente, antes de cerrar el programa, los cambios se guardan nuevamente en archivo, lo que confirma que la estructura no es aislada, sino parte de un flujo completo de entrada, procesamiento y salida de información.
 ---
