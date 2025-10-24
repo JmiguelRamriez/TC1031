@@ -3,54 +3,31 @@
 
 **Autor:** Jose Miguel Ramirez Gutierrez  
 **Matrícula:** A01712628  
+
 ---
 
 ## Descripción del Avance
 
-Este avance del proyecto se enfoca en la implementación de una **Lista Doblemente Ligada** como la estructura principal para almacenar el catálogo de libros, reemplazando el `std::vector` anterior. Este cambio permite una gestión de memoria más dinámica y sienta las bases para futuras operaciones de inserción y eliminación en tiempo constante (O(1)).
+Este proyecto implementa un sistema de gestión de biblioteca en C++. En la versión actual, el catálogo de libros se migró a una **Lista Doblemente Ligada**, reemplazando la estructura previa basada en `std::vector`. Esta modificación permite una administración dinámica de la memoria, recorridos bidireccionales y operaciones de inserción y eliminación en tiempo constante en los extremos (O(1)).
 
-### Estado Actual del Proyecto
+---
 
-El sistema mantiene las siguientes funcionalidades, ahora implementadas sobre la Lista Doblemente Ligada:
+## Estado Actual del Proyecto
 
-**Estructura de Datos:**
-- Catálogo almacenado en una **Lista Doblemente Ligada** personalizada (`Nodo* cabeza`, `Nodo* cola`).
-- El constructor (`Biblioteca()`) inicializa los punteros a `nullptr`.
-- El destructor (`~Biblioteca()`) libera correctamente la memoria de todos los nodos.
+### Estructura de Datos
+- Catálogo almacenado en una **Lista Doblemente Ligada** con mantenimiento de punteros `head` y `tail`.
+- Inserciones al final en tiempo O(1).
+- Recorridos y búsquedas en tiempo O(n).
+- Destructor que libera correctamente toda la memoria dinámica.
 
-**Gestión de Catálogo y Persistencia:**
-- **Agregar Libros:** Operación O(1) utilizando el puntero `cola`.
-- **Visualizar:** Recorrido lineal O(n) de la lista ligada.
-- **Persistencia de datos:** Los métodos `leer_csv` y `guardar_csv` han sido adaptados para recorrer y construir la lista ligada dinámicamente.
+### Gestión y Persistencia
+- Carga de datos desde `libros.csv` reconstruyendo la lista en memoria.
+- Guardado automático en `libros.csv` al final de la ejecución.
+- Préstamo y devolución de libros actualizando disponibilidad.
 
-**Búsqueda y Ordenamiento:**
-- **Búsqueda por atributos:** Todas las búsquedas (`autor`, `género`, `título`, `año`) se realizan mediante un recorrido lineal O(n) de la lista.
-- **Ordenamiento:** Los métodos `ordenar_titulo` y `ordenar_anio` han sido reimplementados utilizando un algoritmo de ordenamiento simple (**Selection Sort** por intercambio de data) adecuado para listas ligadas.
-
-### Actualización: Ordenamiento en la Lista Doblemente Ligada
-
-En este avance el ordenamiento ya no se realiza con `std::sort`, sino que se implementó manualmente utilizando una variante de Selection Sort adaptada a la lista doblemente ligada. Este cambio fue necesario debido a que `std::sort` requiere acceso aleatorio en memoria (iteradores random-access), lo cual no es posible directamente sobre una lista enlazada.
-
-El algoritmo recorre la lista nodo por nodo y compara los valores con los siguientes nodos. Cuando encuentra un elemento menor (para ordenar ascendentemente), intercambia la información de los nodos.
-
-Este método funciona correctamente sobre listas ligadas y evita tener que copiar los datos a un `vector` temporal.
-
-#### Complejidad temporal real
-
-- La operación consiste en dos ciclos anidados: un nodo externo y un nodo interno sobre los restantes.
-- Por ello, la complejidad temporal es O(n²).
-- Este comportamiento corresponde al algoritmo Selection Sort.
-
-#### Justificación de la elección
-
-Se eligió Selection Sort en esta etapa del proyecto debido a:
-
-1. Su implementación es directa sobre estructuras ligadas sin necesidad de acceso por índices.
-2. No requiere memoria adicional significativa.
-3. Resulta suficiente para un catálogo pequeño o mediano.
-4. Permite demostrar dominio de recorrido y manipulación de nodos de la lista.
-
-Posteriormente, si se manejan catálogos grandes, podría reemplazarse por Merge Sort, que es el algoritmo más adecuado para listas ligadas y tiene complejidad O(n log n).
+### Búsqueda y Ordenamiento
+- Búsqueda por autor, género, título y año mediante recorrido lineal.
+- Ordenamiento por título y por año utilizando Selection Sort adaptado a listas doblemente ligadas (intercambio de datos entre nodos).
 
 ---
 
