@@ -260,8 +260,8 @@ Esta elección demuestra el uso correcto del criterio algorítmico y estructural
 
 
 ### SICT0303: Implementa acciones científicas
-
 Se implementaron mecanismos de consulta recorriendo la estructura desde el primer nodo hasta el último, y también en sentido inverso cuando es necesario.  
 Los datos se cargan correctamente desde el archivo CSV y se insertan dentro de la estructura, lo que asegura la correcta integración entre persistencia y modelo en memoria.  
 Finalmente, antes de cerrar el programa, los cambios se guardan nuevamente en archivo, lo que confirma que la estructura no es aislada, sino parte de un flujo completo de entrada, procesamiento y salida de información.
----
+
+
