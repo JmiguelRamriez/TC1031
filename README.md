@@ -27,6 +27,31 @@ El sistema mantiene las siguientes funcionalidades, ahora implementadas sobre la
 - **Búsqueda por atributos:** Todas las búsquedas (`autor`, `género`, `título`, `año`) se realizan mediante un recorrido lineal O(n) de la lista.
 - **Ordenamiento:** Los métodos `ordenar_titulo` y `ordenar_anio` han sido reimplementados utilizando un algoritmo de ordenamiento simple (**Selection Sort** por intercambio de data) adecuado para listas ligadas.
 
+### Actualización: Ordenamiento en la Lista Doblemente Ligada
+
+En este avance el ordenamiento ya no se realiza con `std::sort`, sino que se implementó manualmente utilizando una variante de Selection Sort adaptada a la lista doblemente ligada. Este cambio fue necesario debido a que `std::sort` requiere acceso aleatorio en memoria (iteradores random-access), lo cual no es posible directamente sobre una lista enlazada.
+
+El algoritmo recorre la lista nodo por nodo y compara los valores con los siguientes nodos. Cuando encuentra un elemento menor (para ordenar ascendentemente), intercambia la información de los nodos.
+
+Este método funciona correctamente sobre listas ligadas y evita tener que copiar los datos a un `vector` temporal.
+
+#### Complejidad temporal real
+
+- La operación consiste en dos ciclos anidados: un nodo externo y un nodo interno sobre los restantes.
+- Por ello, la complejidad temporal es O(n²).
+- Este comportamiento corresponde al algoritmo Selection Sort.
+
+#### Justificación de la elección
+
+Se eligió Selection Sort en esta etapa del proyecto debido a:
+
+1. Su implementación es directa sobre estructuras ligadas sin necesidad de acceso por índices.
+2. No requiere memoria adicional significativa.
+3. Resulta suficiente para un catálogo pequeño o mediano.
+4. Permite demostrar dominio de recorrido y manipulación de nodos de la lista.
+
+Posteriormente, si se manejan catálogos grandes, podría reemplazarse por Merge Sort, que es el algoritmo más adecuado para listas ligadas y tiene complejidad O(n log n).
+
 ---
 
 ## Instrucciones de Uso
