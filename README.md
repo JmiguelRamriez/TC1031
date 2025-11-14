@@ -460,7 +460,7 @@ Este mecanismo garantiza que todos los cambios realizados durante la sesión (pr
 Asegúrate de tener los tres archivos (`Libro.h`, `Biblioteca.h`, `Main.cpp`) en el mismo directorio.
 
 ```bash
-g++ Main.cpp -o biblioteca
+g++ main.cpp -o biblioteca
 ```
 
 ### Ejecución
