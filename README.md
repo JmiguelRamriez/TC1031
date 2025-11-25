@@ -1,3 +1,7 @@
+# Videos de problemas 
+https://drive.google.com/drive/folders/1hyD_FN3ZoO44Llc40qO7UL1_nayVwPs5?usp=sharing
+---
+
 # Sistema de Gestión de Biblioteca
 ## Proyecto TC1031
 
